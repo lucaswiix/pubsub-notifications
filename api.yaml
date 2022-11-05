@@ -1,0 +1,12 @@
+input:
+  api:
+    port: 8080
+  redis:
+    addr: localhost:6379
+    password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+  rabbitmq: 
+      topic: meli-notifications
+      topic_url: amqp://guest:guest@localhost:5672
+
+logger:
+  level: -1

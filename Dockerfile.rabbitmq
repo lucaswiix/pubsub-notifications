@@ -1,0 +1,5 @@
+  FROM rabbitmq:3-management-alpine
+  COPY ./config/rabbitmq/rabbitmq_delayed_message_exchange-3.11.1.ez /opt/rabbitmq/plugins/
+  COPY ./config/rabbitmq/rabbitmq.config /etc/rabbitmq/rabbitmq.config
+  COPY ./config/rabbitmq/rabbitmq-defs.json /etc/rabbitmq/rabbitmq-defs.json
+  RUN rabbitmq-plugins enable rabbitmq_delayed_message_exchange
