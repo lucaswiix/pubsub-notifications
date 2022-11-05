@@ -52,11 +52,11 @@ func NewRabbitMQ() error {
 
 	_, err = ch.QueueDeclare(
 		topicName, // name
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // no-wait
+		true,
 		false,
-		nil, // arguments
+		false,
+		false,
+		nil,
 	)
 	if err != nil {
 		utils.Log.Error("Failed to declare a queue", zap.Error(err))

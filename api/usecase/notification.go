@@ -15,20 +15,20 @@ type NotificationUseCase interface {
 	SendNotification(notify *dto.NotifyDTO, ctx context.Context) error
 }
 
-type NotificationUsecaseImpl struct {
+type notificationUsecaseImpl struct {
 	notifyService service.NotifyService
 	queueService  service.QueueService
 	optOutService service.OptOutService
 }
 
 func NewNotificationUsecase(notifyService service.NotifyService, queueService service.QueueService, optOutService service.OptOutService) NotificationUseCase {
-	return &NotificationUsecaseImpl{
+	return &notificationUsecaseImpl{
 		notifyService,
 		queueService,
 		optOutService,
 	}
 }
-func (s *NotificationUsecaseImpl) SendNotification(notification *dto.NotifyDTO, ctx context.Context) error {
+func (s *notificationUsecaseImpl) SendNotification(notification *dto.NotifyDTO, ctx context.Context) error {
 	notification.ID = ""
 	if err := IsOptOut(notification, ctx, s.optOutService); err != nil {
 		return err

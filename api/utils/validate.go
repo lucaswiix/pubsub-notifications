@@ -73,6 +73,8 @@ func validate(errors validator.ValidationErrors) string {
 			resultErrors += err.Field() + " must be set to future\n"
 		case "uuid":
 			resultErrors += err.Field() + " invalid user uuid format\n"
+		case "endswith":
+			resultErrors += err.Field() + " only accept png image format\n"
 
 		default:
 			resultErrors += "error in filed " + err.Tag()

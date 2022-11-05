@@ -63,6 +63,8 @@ func (r *implQueueRepository) Send(notification *dto.NotifyDTO, ctx context.Cont
 		amqp.Publishing{
 			ContentType: "application/json",
 			Body:        []byte(json),
+			MessageId:   notification.ToUserID,
+			Type:        notification.Type,
 			Headers:     headers,
 		})
 	if err != nil {

@@ -32,7 +32,7 @@ func InitWebServer() *gin.Engine {
 	ginServer.Use(gin.LoggerWithConfig(gin.LoggerConfig{SkipPaths: skipPaths}))
 
 	RegisterHealthCheckHandlers(ginServer)
-
+	RegisterMetricsHandlers(ginServer)
 	notifyRepository := repository.NewNotifyRepository(repository.DB)
 	queueRepository := repository.NewQueueRepository(repository.CH)
 	optOutRepository := repository.NewOptOutRepository(repository.DB)
