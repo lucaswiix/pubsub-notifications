@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 			log.Fatalf("Error on Unmarshal configs: %s", err)
 		}
 
-		pc, err := _notificationClient.NewRabbitMQClient(config.Address)
+		pc, err := _notificationClient.NewRabbitMQClient(config.Address, config.QueueName)
 		if err != nil {
 			log.Panicln(err)
 		}

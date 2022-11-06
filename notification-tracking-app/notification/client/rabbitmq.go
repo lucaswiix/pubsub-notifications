@@ -3,14 +3,8 @@ package client
 import (
 	"context"
 	"errors"
-	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/spf13/viper"
-)
-
-var (
-	QueueName = viper.GetString("queue_name")
 )
 
 type rabbitmqClient struct {
@@ -20,7 +14,7 @@ type rabbitmqClient struct {
 	notificationStatus <-chan amqp.Delivery
 }
 
-func NewRabbitMQClient(connectionString string) (*rabbitmqClient, error) {
+func NewRabbitMQClient(connectionString, queueName string) (*rabbitmqClient, error) {
 	c := &rabbitmqClient{}
 	var err error
 
@@ -34,7 +28,7 @@ func NewRabbitMQClient(connectionString string) (*rabbitmqClient, error) {
 		return nil, err
 	}
 
-	err = c.configureQueue()
+	err = c.configureQueue(queueName)
 
 	return c, err
 }
@@ -54,10 +48,9 @@ func (c *rabbitmqClient) Close() {
 	c.conn.Close()
 }
 
-func (c *rabbitmqClient) configureQueue() error {
-	log.Printf("log %s", QueueName)
+func (c *rabbitmqClient) configureQueue(queueName string) error {
 	_, err := c.ch.QueueDeclare(
-		QueueName,
+		queueName,
 		true,  // durable
 		false, // delete when unused
 		false, // exclusive
@@ -69,7 +62,7 @@ func (c *rabbitmqClient) configureQueue() error {
 	}
 
 	c.notificationStatus, err = c.ch.Consume(
-		QueueName, // queue
+		queueName, // queue
 		"",        // consumer
 		false,     // auto-ack
 		false,     // exclusive
