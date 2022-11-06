@@ -14,5 +14,5 @@ RUN apk --no-cache add ca-certificates && \
 WORKDIR /root/
 COPY --from=builder /go/src/github.com/lucaswiix/notifications-tracking-app/bff .
 COPY --from=builder /go/src/github.com/lucaswiix/notifications-tracking-app/config.yaml .
-COPY --from=builder /go/src/github.com/lucaswiix/notifications-tracking-app/website .
+COPY --from=builder /go/src/github.com/lucaswiix/notifications-tracking-app/website website/.
 CMD ["./bff"]%
