@@ -54,7 +54,7 @@ curl --location --request DELETE 'localhost:8080/api/user/opt-out/33f0a01e-bafc-
 }'
 ```
 
-- simulate the web client
+- consumer web client
 ```
 ws://localhost:1323/notifications/track/${userUUID}
 ```
