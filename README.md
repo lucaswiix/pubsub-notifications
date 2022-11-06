@@ -1,11 +1,15 @@
-#Meli  notifications go-lang
+# Pubsub-notification
 
-how to run 
+
+# How to Run
 ```
 docker-compose up -d
 ```
 
-#Arquitecture
+# Arquitecture
+
+![Overall Architecture](assets/architecture.png)
+
 
 
 
