@@ -19,7 +19,7 @@ curl --location --request POST 'localhost:8080/api/notify' \
 }'
 ```
 
-- send scheduler notification (scheduler_datetime format `yyyy-MM-dd HH:mm:ss`)
+- send scheduler notification (format `yyyy-MM-dd HH:mm:ss`)
 ```
 curl --location --request POST 'localhost:8080/api/notify' \
 --header 'x-user-id: d3ad4b62-3423-420c-abdf-1b3f15eb1f8d' \
