@@ -60,6 +60,11 @@ ws://localhost:1323/notifications/track/${userUUID}
 ```
 
 
+# Observability
+- logs `http://localhost:5601/app/logs/stream`
+- metrics `http://localhost:8080/metrics`
+- trace NTD
+
 # Test coverage
 ```
 make test-cov-html
@@ -68,6 +73,7 @@ make test-cov-html
 
 ![Overall Architecture](assets/architecture.png)
 
+# Monorepo
 
-
-
+- api folder is the publish-notification-api
+- notification-tracking-app folder is the bff
