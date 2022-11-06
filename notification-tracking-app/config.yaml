@@ -1,4 +1,4 @@
-rabbitmq_addr: amqp://guest:guest@localhost:5672/
+rabbitmq_addr: amqp://guest:guest@rabbitmq:5672/
 queue_name: meli-notifications
 
 logger:

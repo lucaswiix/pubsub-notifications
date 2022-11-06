@@ -29,7 +29,6 @@ func InitWebServer() *gin.Engine {
 	ginServer.Use(gin.Recovery())
 	ginServer.Use(gzip.Gzip(gzip.BestSpeed))
 	ginServer.Use(cors.CORS())
-	// ginServer.Use(middleware.JSONLogMiddleware())
 
 	skipPaths := strings.Split(os.Getenv("LOG_SKIP_PATH"), ",")
 	ginServer.Use(gin.LoggerWithConfig(gin.LoggerConfig{SkipPaths: skipPaths}))
@@ -48,5 +47,6 @@ func InitWebServer() *gin.Engine {
 
 	RegisterNotifyHandlers(ginServer, sendNotificationUsecase)
 	RegisterOptOutHandlers(ginServer, optOutService)
+
 	return ginServer
 }

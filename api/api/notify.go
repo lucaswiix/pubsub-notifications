@@ -21,20 +21,9 @@ func RegisterNotifyHandlers(handler *gin.Engine, notificationUsecase usecase.Not
 		notificationUsecase,
 	}
 
-	handler.POST("/notify", ah.Sent)
+	handler.POST("/api/notify", ah.Sent)
 }
 
-// @Summary Send notification
-// @Tags Tenants
-// @Schemes
-// @Accept json
-// @Param body body dto.NotifyDTO true "Send Notification"
-// @Produce json
-// @Success 200 {object} object{uuid=string,type_name=string} "Resposta de successo quando é atualizado um tenant"
-// @Success 201 {object} object{uuid=string,type_name=string} "Resposta de successo quando é criado um novo tenant"
-// @Failure 400 {object} object{message=string} "Resposta de erro quando identifica que o atributo type_name está vazio ou inválido ou quando o account não está autorizado a delegar um tenant"
-// @Failure 500 {object} object{message=string} "Resposta de erro durante o processo de criar/alterar um tenant"
-// @Router /tenants [post]
 func (h *notifyHandler) Sent(c *gin.Context) {
 	ctx := c.Request.Context()
 	var notifyDTO dto.NotifyDTO

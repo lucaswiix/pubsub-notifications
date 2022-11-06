@@ -2,10 +2,11 @@ package api
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/service"
 	"github.com/lucaswiix/meli/notifications/utils"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -20,21 +21,10 @@ func RegisterOptOutHandlers(handler *gin.Engine, optOutService service.OptOutSer
 		optOutService,
 	}
 
-	handler.POST("/opt-out", ah.Set)
-	handler.DELETE("/opt-out/:id", ah.Del)
+	handler.POST("/api/user/opt-out", ah.Set)
+	handler.DELETE("/api/user/opt-out/:id", ah.Del)
 }
 
-// @Summary Set user opt out
-// @Tags SetOptOut
-// @Schemes
-// @Accept json
-// @Param body body dto.NotifyDTO true "Send Notification"
-// @Produce json
-// @Success 200 {object} object{uuid=string,type_name=string} "Resposta de successo quando é atualizado um tenant"
-// @Success 201 {object} object{uuid=string,type_name=string} "Resposta de successo quando é criado um novo tenant"
-// @Failure 400 {object} object{message=string} "Resposta de erro quando identifica que o atributo type_name está vazio ou inválido ou quando o account não está autorizado a delegar um tenant"
-// @Failure 500 {object} object{message=string} "Resposta de erro durante o processo de criar/alterar um tenant"
-// @Router /set-opt-out [post]
 func (h *optOutHandler) Set(c *gin.Context) {
 	ctx := c.Request.Context()
 	var optOut dto.OptOut
@@ -60,17 +50,6 @@ func (h *optOutHandler) Set(c *gin.Context) {
 
 }
 
-// @Summary Set user opt out
-// @Tags SetOptOut
-// @Schemes
-// @Accept json
-// @Param body body dto.NotifyDTO true "Send Notification"
-// @Produce json
-// @Success 200 {object} object{uuid=string,type_name=string} "Resposta de successo quando é atualizado um tenant"
-// @Success 201 {object} object{uuid=string,type_name=string} "Resposta de successo quando é criado um novo tenant"
-// @Failure 400 {object} object{message=string} "Resposta de erro quando identifica que o atributo type_name está vazio ou inválido ou quando o account não está autorizado a delegar um tenant"
-// @Failure 500 {object} object{message=string} "Resposta de erro durante o processo de criar/alterar um tenant"
-// @Router /opt-out [delete]
 func (h *optOutHandler) Del(c *gin.Context) {
 	ctx := c.Request.Context()
 	userID := c.Param("id")
