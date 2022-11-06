@@ -10,11 +10,20 @@ import (
 	"github.com/lucaswiix/meli/notifications/service"
 	"github.com/lucaswiix/meli/notifications/usecase"
 	"github.com/lucaswiix/meli/notifications/utils"
+	"github.com/prometheus/client_golang/prometheus"
 
 	_ "time/tzdata"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+)
+
+var notificationStatus = prometheus.NewCounterVec(
+	prometheus.CounterOpts{
+		Name: "http_request_get_user_status_count", // metric name
+		Help: "Count of status returned by user.",
+	},
+	[]string{"user", "status"}, // labels
 )
 
 func InitWebServer() *gin.Engine {
@@ -34,6 +43,8 @@ func InitWebServer() *gin.Engine {
 	ginServer.Use(gin.LoggerWithConfig(gin.LoggerConfig{SkipPaths: skipPaths}))
 
 	RegisterHealthCheckHandlers(ginServer)
+	prometheus.MustRegister(notificationStatus)
+
 	RegisterMetricsHandlers(ginServer)
 	notifyRepository := repository.NewNotifyRepository(repository.DB)
 	queueRepository := repository.NewQueueRepository(repository.CH)

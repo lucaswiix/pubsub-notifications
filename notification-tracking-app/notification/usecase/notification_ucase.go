@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 
 	"github.com/lucaswiix/notifications-tracking-app/domain"
+	"github.com/lucaswiix/notifications-tracking-app/utils"
+	"go.uber.org/zap"
 )
 
 type notificationUsecase struct {
@@ -18,6 +20,7 @@ func NewNotificationUsecase(pClient domain.NotificationClient) domain.Notificati
 func (p *notificationUsecase) TrackByUserID(ctx context.Context, id, nType string) (*domain.Notification, error) {
 	bytes, err := p.pc.ConsumeByUserID(ctx, id, nType)
 	if err != nil {
+		utils.Log.Error("error when try to consume notification by user id", zap.Error(err))
 		return nil, err
 	}
 

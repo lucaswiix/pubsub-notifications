@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 
+	"github.com/lucaswiix/notifications-tracking-app/utils"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"go.uber.org/zap"
 )
 
 type rabbitmqClient struct {
@@ -20,11 +22,13 @@ func NewRabbitMQClient(connectionString, queueName string) (*rabbitmqClient, err
 
 	c.conn, err = amqp.Dial(connectionString)
 	if err != nil {
+		utils.Log.Error("error on try to connect with amqp", zap.Error(err))
 		return nil, err
 	}
 
 	c.ch, err = c.conn.Channel()
 	if err != nil {
+		utils.Log.Error("error on try to make a amqp channel", zap.Error(err))
 		return nil, err
 	}
 
@@ -58,6 +62,7 @@ func (c *rabbitmqClient) configureQueue(queueName string) error {
 		nil,   // arguments
 	)
 	if err != nil {
+		utils.Log.Error("error on queue declare a amqp channel", zap.Error(err))
 		return err
 	}
 

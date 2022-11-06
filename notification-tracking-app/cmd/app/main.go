@@ -6,10 +6,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/lucaswiix/notifications-tracking-app/notification/client"
 	_notificationClient "github.com/lucaswiix/notifications-tracking-app/notification/client"
 	_notificationWebDelivery "github.com/lucaswiix/notifications-tracking-app/notification/delivery/web"
 	_notificationUcase "github.com/lucaswiix/notifications-tracking-app/notification/usecase"
+	"github.com/lucaswiix/notifications-tracking-app/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,12 +23,13 @@ var rootCmd = &cobra.Command{
 	Short: "BFF for Meli Notifications",
 	Long:  `BFF for Meli Notifications`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := client.DefaultRabbitConfig
+
+		config := _notificationClient.DefaultRabbitConfig
 
 		if err := viper.Unmarshal(&config); err != nil {
 			log.Fatalf("Error on Unmarshal configs: %s", err)
 		}
-
+		utils.InitLogger()
 		pc, err := _notificationClient.NewRabbitMQClient(config.Address, config.QueueName)
 		if err != nil {
 			log.Panicln(err)
@@ -39,6 +40,9 @@ var rootCmd = &cobra.Command{
 
 		//web
 		_notificationWebDelivery.NewNotificationHandler(pu)
+
+		// http.Handle("/metrics", promhttp.Handler())
+		// http.ListenAndServe(":8090", nil)
 	},
 }
 

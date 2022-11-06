@@ -7,6 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/lucaswiix/notifications-tracking-app/domain"
+	"github.com/lucaswiix/notifications-tracking-app/utils"
+	"go.uber.org/zap"
 )
 
 type NotificationHandler struct {
@@ -34,6 +36,7 @@ func NewNotificationHandler(nu domain.NotificationUsecase) {
 func (p *NotificationHandler) TrackByUserID(c echo.Context) error {
 	wsConn, err := p.upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
+		utils.Log.Error("error when try connect with upgrader", zap.Error(err))
 		return err
 	}
 
@@ -49,18 +52,20 @@ func (p *NotificationHandler) TrackByUserID(c echo.Context) error {
 	for {
 		select {
 		case <-ctx.Done():
+			utils.Log.Debug("user disconnect", zap.String("userID", c.Param("userID")))
 			wsConn.Close()
 			return nil
 		default:
+			utils.Log.Debug("user connect", zap.String("userID", c.Param("userID")))
 			p, err := p.NUsecase.TrackByUserID(ctx, c.Param("userID"), "web")
 			if err != nil {
-				c.Logger().Error(err)
+				utils.Log.Error("error when try to track notification by user id", zap.Error(err))
 				continue
 			}
 
 			err = wsConn.WriteJSON(p)
 			if err != nil {
-				c.Logger().Error(err)
+				utils.Log.Error("error when try to write json on socket", zap.Error(err))
 			}
 		}
 	}
