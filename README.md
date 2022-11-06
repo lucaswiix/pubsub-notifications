@@ -44,14 +44,7 @@ curl --location --request POST 'localhost:8080/api/user/opt-out' \
 
 - del opt-out user
 ```
-curl --location --request DELETE 'localhost:8080/api/user/opt-out/33f0a01e-bafc-47cb-b5b8-f96d451086ed' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "title": "promocao",
-    "message": "vib barato",
-    "image": "cat.png",
-    "type": "web"
-}'
+curl --location --request DELETE 'localhost:8080/api/user/opt-out/33f0a01e-bafc-47cb-b5b8-f96d451086ed'
 ```
 
 - consumer web client
