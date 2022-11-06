@@ -5,6 +5,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/lucaswiix/notifications-tracking-app/domain"
 )
 
@@ -15,6 +16,8 @@ type NotificationHandler struct {
 
 func NewNotificationHandler(nu domain.NotificationUsecase) {
 	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	e.File("/", "website/index.html")
 

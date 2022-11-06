@@ -2,9 +2,9 @@ package api
 
 import (
 	"fmt"
-	"meli/notifications/dto"
-	"meli/notifications/service"
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/service"
+	"github.com/lucaswiix/meli/notifications/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

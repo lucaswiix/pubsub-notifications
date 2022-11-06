@@ -1,11 +1,16 @@
 package utils
 
 import (
+	"encoding/json"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+)
+
+var (
+	JsonSyntaxErr = "invalid json input"
 )
 
 func InitValidation() {
@@ -53,6 +58,10 @@ func IsAfterNow(
 
 // custom validation error messages
 func ValidateErrors(requestError error) string {
+	var jsonErr *json.SyntaxError
+	if requestError == jsonErr {
+		return JsonSyntaxErr
+	}
 	return validate(requestError.(validator.ValidationErrors))
 }
 

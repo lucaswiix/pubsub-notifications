@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"meli/notifications/dto"
-	"meli/notifications/repository"
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/repository"
+	"github.com/lucaswiix/meli/notifications/utils"
 
 	"go.uber.org/zap"
 )

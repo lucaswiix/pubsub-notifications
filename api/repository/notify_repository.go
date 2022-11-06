@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"meli/notifications/dto"
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/utils"
 
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"

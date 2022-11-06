@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"fmt"
-	"meli/notifications/dto"
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/utils"
 	"time"
 
 	"github.com/goccy/go-json"

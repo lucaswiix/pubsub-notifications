@@ -55,8 +55,8 @@ func init() {
 
 	viper.BindPFlags(rootCmd.PersistentFlags())
 
-	rootCmd.Flags().String("input.rabbitmq_addr", "", "http server api port")
-	rootCmd.Flags().String("input.queue_name", "", "input redis address")
+	rootCmd.Flags().String("rabbitmq_addr", "", "rabbit address")
+	rootCmd.Flags().String("queue_name", "", "redis queue name")
 	rootCmd.Flags().String("logger.level", "", "logger level")
 
 	rootCmd.Flags().String("prom.addr", ":9090", "prometheus address")

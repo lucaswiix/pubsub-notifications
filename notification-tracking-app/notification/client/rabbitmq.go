@@ -3,12 +3,14 @@ package client
 import (
 	"context"
 	"errors"
+	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/spf13/viper"
 )
 
 var (
-	QueueName = DefaultRabbitConfig.QueueName
+	QueueName = viper.GetString("queue_name")
 )
 
 type rabbitmqClient struct {
@@ -53,6 +55,7 @@ func (c *rabbitmqClient) Close() {
 }
 
 func (c *rabbitmqClient) configureQueue() error {
+	log.Printf("log %s", QueueName)
 	_, err := c.ch.QueueDeclare(
 		QueueName,
 		true,  // durable

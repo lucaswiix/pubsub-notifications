@@ -3,10 +3,10 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/usecase/mock"
+	"github.com/lucaswiix/meli/notifications/utils"
 	"io"
-	"meli/notifications/dto"
-	"meli/notifications/usecase/mock"
-	"meli/notifications/utils"
 	"net/http"
 	"net/http/httptest"
 	"strings"

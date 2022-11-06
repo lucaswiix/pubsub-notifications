@@ -1,14 +1,17 @@
 package api
 
 import (
-	"meli/notifications/pkg/cors"
-	"meli/notifications/repository"
-	"meli/notifications/service"
-	"meli/notifications/usecase"
-	"meli/notifications/utils"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/lucaswiix/meli/notifications/pkg/cors"
+	"github.com/lucaswiix/meli/notifications/repository"
+	"github.com/lucaswiix/meli/notifications/service"
+	"github.com/lucaswiix/meli/notifications/usecase"
+	"github.com/lucaswiix/meli/notifications/utils"
+
+	_ "time/tzdata"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"

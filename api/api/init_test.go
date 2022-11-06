@@ -1,9 +1,10 @@
 package api
 
 import (
-	"meli/notifications/utils"
 	"os"
 	"testing"
+
+	"github.com/lucaswiix/meli/notifications/utils"
 )
 
 func TestMain(m *testing.M) {

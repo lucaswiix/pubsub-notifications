@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/utils"
 
 	"github.com/go-redis/redis/v8"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -28,6 +28,7 @@ func InitDatabase() error {
 func NewRabbitMQ() error {
 	topicUrl := viper.GetString("input.rabbitmq.topic_url")
 	topicName := viper.GetString("input.rabbitmq.topic")
+	utils.Log.Info(topicUrl)
 	conn, err := amqp.Dial(topicUrl)
 	if err != nil {
 		utils.Log.Error("Failed to connect to rabbitmq", zap.Error(err))

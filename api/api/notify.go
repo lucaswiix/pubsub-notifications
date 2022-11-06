@@ -2,10 +2,11 @@ package api
 
 import (
 	"fmt"
-	"meli/notifications/dto"
-	"meli/notifications/usecase"
-	"meli/notifications/utils"
 	"net/http"
+
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/usecase"
+	"github.com/lucaswiix/meli/notifications/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -51,6 +52,7 @@ func (h *notifyHandler) Sent(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": utils.ValidateErrors(err)})
 		return
 	}
+
 	err := h.notificationUsecase.SendNotification(&notifyDTO, ctx)
 	if err != nil {
 		if err == utils.ErrOptOutUser {

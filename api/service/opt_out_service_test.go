@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	"meli/notifications/repository/mock"
+	"github.com/lucaswiix/meli/notifications/repository/mock"
 	"testing"
 
 	"github.com/golang/mock/gomock"

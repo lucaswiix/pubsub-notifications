@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/utils"
 
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"

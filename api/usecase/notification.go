@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"meli/notifications/dto"
-	"meli/notifications/service"
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/service"
+	"github.com/lucaswiix/meli/notifications/utils"
 
 	"go.uber.org/zap"
 )

@@ -1,4 +1,4 @@
-module meli/notifications
+module github.com/lucaswiix/meli/notifications
 
 go 1.17
 

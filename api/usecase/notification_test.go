@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 	"errors"
-	"meli/notifications/dto"
-	"meli/notifications/service/mock"
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/service/mock"
 	"testing"
 	"time"
 

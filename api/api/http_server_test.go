@@ -2,8 +2,8 @@ package api
 
 import (
 	"fmt"
+	"github.com/lucaswiix/meli/notifications/utils"
 	"log"
-	"meli/notifications/utils"
 	"net/http"
 	"net/http/httptest"
 	"os"

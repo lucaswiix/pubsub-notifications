@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	"meli/notifications/repository"
+
+	"github.com/lucaswiix/meli/notifications/repository"
 )
 
 //go:generate mockgen -destination=mock/opt_out.go -package=mock . OptOutService

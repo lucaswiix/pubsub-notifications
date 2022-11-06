@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/dto"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

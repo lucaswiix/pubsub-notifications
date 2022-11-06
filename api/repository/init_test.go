@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/utils"
 	"os"
 	"testing"
 )

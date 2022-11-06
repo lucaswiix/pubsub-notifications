@@ -1,9 +1,0 @@
-input:
-  api:
-    port: 8090
-  rabbitmq: 
-      subscribe: meli-notifications
-      subscribe_url: amqp://guest:guest@localhost:5672
-
-logger:
-  level: -1

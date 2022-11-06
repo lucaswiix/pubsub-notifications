@@ -1,5 +1,5 @@
 FROM golang:1 as builder
-WORKDIR /go/src/meli/notifications
+WORKDIR /go/src/github.com/lucaswiix/meli/notifications
 
 COPY go.mod .
 COPY go.sum .
@@ -12,5 +12,6 @@ RUN apk --no-cache upgrade
 RUN apk --no-cache add ca-certificates && \
     rm -rf /var/cache/apk/*
 WORKDIR /root/
-COPY --from=builder /go/src/meli/notifications/api .
+COPY --from=builder /go/src/github.com/lucaswiix/meli/notifications/api .
+COPY --from=builder /go/src/github.com/lucaswiix/meli/notifications/api.yaml .
 CMD ["./api"]%

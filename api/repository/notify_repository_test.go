@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/dto"
 	"testing"
 
 	"github.com/go-redis/redismock/v8"

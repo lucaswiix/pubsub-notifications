@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
-	"meli/notifications/api"
-	"meli/notifications/repository"
-	"meli/notifications/utils"
 	"os"
 	"strings"
 
+	"github.com/lucaswiix/meli/notifications/api"
+	"github.com/lucaswiix/meli/notifications/repository"
+	"github.com/lucaswiix/meli/notifications/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

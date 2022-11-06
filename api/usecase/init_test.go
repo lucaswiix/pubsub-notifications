@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"meli/notifications/utils"
+	"github.com/lucaswiix/meli/notifications/utils"
 	"os"
 	"testing"
 )

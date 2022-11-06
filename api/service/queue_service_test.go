@@ -2,9 +2,10 @@ package service
 
 import (
 	"errors"
-	"meli/notifications/dto"
-	"meli/notifications/repository/mock"
 	"testing"
+
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/repository/mock"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"

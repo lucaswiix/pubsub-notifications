@@ -2,10 +2,11 @@ package cors_test
 
 import (
 	"context"
-	"meli/notifications/pkg/cors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/lucaswiix/meli/notifications/pkg/cors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
