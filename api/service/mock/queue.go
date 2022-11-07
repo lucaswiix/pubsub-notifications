@@ -6,10 +6,10 @@ package mock
 
 import (
 	context "context"
-	dto "github.com/lucaswiix/meli/notifications/dto"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	dto "github.com/lucaswiix/meli/notifications/dto"
 )
 
 // MockQueueService is a mock of QueueService interface.

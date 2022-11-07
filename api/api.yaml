@@ -1,6 +1,8 @@
 input:
   api:
     port: 8080
+  dynamodb:
+    addr: http://localhost:8000
   redis:
     addr: localhost:6379
     password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81

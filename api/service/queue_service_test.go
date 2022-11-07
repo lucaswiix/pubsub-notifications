@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -9,6 +10,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	ctx = context.TODO()
 )
 
 func TestSendSuccess(t *testing.T) {

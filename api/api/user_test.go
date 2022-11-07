@@ -18,21 +18,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Set_Opt_Out_User_Success(t *testing.T) {
+func TestPutUserOptOutSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
 	user := &dto.OptOut{
 		UserID: userID,
 	}
 
-	optOutService.EXPECT().Set(user.UserID, gomock.Any()).Return(nil)
+	userService.EXPECT().PutOptOut(userID, gomock.Any()).Return(nil)
 
 	router := gin.Default()
 
-	RegisterOptOutHandlers(router, optOutService)
+	RegisterUserHandlers(router, userService)
 
 	requestBody, _ := json.Marshal(user)
 	w := httptest.NewRecorder()
@@ -54,7 +54,7 @@ func Test_Set_Opt_Out_User_Validate_Error(t *testing.T) {
 
 	router := gin.Default()
 
-	RegisterOptOutHandlers(router, nil)
+	RegisterUserHandlers(router, nil)
 
 	requestBody, _ := json.Marshal(user)
 	w := httptest.NewRecorder()
@@ -72,17 +72,17 @@ func Test_Set_Opt_Out_User_Service_Error_Error(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
 	user := &dto.OptOut{
 		UserID: userID,
 	}
 
-	optOutService.EXPECT().Set(user.UserID, gomock.Any()).Return(errors.New("error"))
+	userService.EXPECT().PutOptOut(user.UserID, gomock.Any()).Return(errors.New("error"))
 
 	router := gin.Default()
 
-	RegisterOptOutHandlers(router, optOutService)
+	RegisterUserHandlers(router, userService)
 
 	requestBody, _ := json.Marshal(user)
 	w := httptest.NewRecorder()
@@ -101,13 +101,13 @@ func Test_Del_Opt_Out_User_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
-	optOutService.EXPECT().Del(userID, gomock.Any()).Return(nil)
+	userService.EXPECT().Del(userID, gomock.Any()).Return(nil)
 
 	router := gin.Default()
 
-	RegisterOptOutHandlers(router, optOutService)
+	RegisterUserHandlers(router, userService)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/user/opt-out/%s", userID), nil)
@@ -122,13 +122,13 @@ func Test_Del_Opt_Out_Service_Error(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
-	optOutService.EXPECT().Del(userID, gomock.Any()).Return(errors.New("error"))
+	userService.EXPECT().Del(userID, gomock.Any()).Return(errors.New("error"))
 
 	router := gin.Default()
 
-	RegisterOptOutHandlers(router, optOutService)
+	RegisterUserHandlers(router, userService)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/user/opt-out/%s", userID), nil)

@@ -50,18 +50,16 @@ func InitWebServer() *gin.Engine {
 	prometheus.MustRegister(notificationStatus)
 
 	RegisterMetricsHandlers(ginServer)
-	notifyRepository := repository.NewNotifyRepository(repository.DB)
 	queueRepository := repository.NewQueueRepository(repository.CH)
-	optOutRepository := repository.NewOptOutRepository(repository.DB)
+	userRepository := repository.NewUserRepository(repository.DB)
 
-	notifyService := service.NewNotifyService(notifyRepository)
 	queueService := service.NewQueueService(queueRepository)
-	optOutService := service.NewOptOutService(optOutRepository)
+	userService := service.NewUserService(userRepository)
 
-	sendNotificationUsecase := usecase.NewNotificationUsecase(notifyService, queueService, optOutService)
+	sendNotificationUsecase := usecase.NewNotificationUsecase(queueService, userService)
 
 	RegisterNotifyHandlers(ginServer, sendNotificationUsecase)
-	RegisterOptOutHandlers(ginServer, optOutService)
+	RegisterUserHandlers(ginServer, userService)
 
 	return ginServer
 }

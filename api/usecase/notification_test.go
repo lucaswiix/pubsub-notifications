@@ -3,10 +3,11 @@ package usecase
 import (
 	"context"
 	"errors"
-	"github.com/lucaswiix/meli/notifications/dto"
-	"github.com/lucaswiix/meli/notifications/service/mock"
 	"testing"
 	"time"
+
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/service/mock"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -22,9 +23,8 @@ var (
 func TestSendNotificationSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
-	notifyService := mock.NewMockNotifyService(ctrl)
 	queueService := mock.NewMockQueueService(ctrl)
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
 	notification := &dto.NotifyDTO{
 		Message:       "message",
@@ -35,14 +35,16 @@ func TestSendNotificationSuccess(t *testing.T) {
 		SchedulerDate: schedulerDate,
 	}
 
-	optOutService.EXPECT().Is(userID, ctx).Return(false, nil)
-	notifyService.EXPECT().Save(notification, ctx).DoAndReturn(func(notification *dto.NotifyDTO, ctx context.Context) error {
-		notification.ID = notificationID
-		return nil
-	}).AnyTimes()
+	user := dto.User{
+		ID:        userID,
+		CreatedAt: time.Now().Format(time.RFC822),
+		IsOptOut:  false,
+	}
+
+	userService.EXPECT().Get(userID, ctx).Return(user, nil)
 	queueService.EXPECT().Send(notification, ctx).Return(nil)
 
-	target := NewNotificationUsecase(notifyService, queueService, optOutService)
+	target := NewNotificationUsecase(queueService, userService)
 
 	err := target.SendNotification(notification, ctx)
 
@@ -53,7 +55,7 @@ func TestSendNotificationSuccess(t *testing.T) {
 func TestSendNotificationIsOptOutError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
 	notification := &dto.NotifyDTO{
 		Message:       "message",
@@ -64,9 +66,15 @@ func TestSendNotificationIsOptOutError(t *testing.T) {
 		SchedulerDate: schedulerDate,
 	}
 
-	optOutService.EXPECT().Is(userID, ctx).Return(true, nil)
+	user := dto.User{
+		ID:        userID,
+		IsOptOut:  true,
+		CreatedAt: time.Now().Format(time.RFC822),
+	}
 
-	target := NewNotificationUsecase(nil, nil, optOutService)
+	userService.EXPECT().Get(userID, ctx).Return(user, nil)
+
+	target := NewNotificationUsecase(nil, userService)
 
 	err := target.SendNotification(notification, ctx)
 
@@ -76,7 +84,7 @@ func TestSendNotificationIsOptOutError(t *testing.T) {
 func TestSendNotificationFunctionError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
 	notification := &dto.NotifyDTO{
 		Message:       "message",
@@ -87,47 +95,20 @@ func TestSendNotificationFunctionError(t *testing.T) {
 		SchedulerDate: schedulerDate,
 	}
 
-	optOutService.EXPECT().Is(userID, ctx).Return(false, errors.New("errors"))
+	userService.EXPECT().Get(userID, ctx).Return(false, errors.New("errors"))
 
-	target := NewNotificationUsecase(nil, nil, optOutService)
+	target := NewNotificationUsecase(nil, userService)
 
 	err := target.SendNotification(notification, ctx)
 
 	assert.EqualError(t, err, "errors")
 }
 
-func TestSendNotificationOnStorageError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-
-	notifyService := mock.NewMockNotifyService(ctrl)
-	optOutService := mock.NewMockOptOutService(ctrl)
-
-	notification := &dto.NotifyDTO{
-		Message:       "message",
-		Title:         "titulo",
-		Image:         "cat.png",
-		Type:          "web",
-		ToUserID:      userID,
-		SchedulerDate: schedulerDate,
-	}
-
-	optOutService.EXPECT().Is(userID, ctx).Return(false, nil)
-	notifyService.EXPECT().Save(notification, ctx).Return(errors.New("error"))
-
-	target := NewNotificationUsecase(notifyService, nil, optOutService)
-
-	err := target.SendNotification(notification, ctx)
-
-	assert.EqualError(t, err, "error")
-
-}
-
 func TestSendNotificationSetStatusFailedWhenErrorToSendToQueue(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
-	notifyService := mock.NewMockNotifyService(ctrl)
 	queueService := mock.NewMockQueueService(ctrl)
-	optOutService := mock.NewMockOptOutService(ctrl)
+	userService := mock.NewMockUserService(ctrl)
 
 	notification := &dto.NotifyDTO{
 		Message:       "message",
@@ -138,56 +119,20 @@ func TestSendNotificationSetStatusFailedWhenErrorToSendToQueue(t *testing.T) {
 		SchedulerDate: schedulerDate,
 	}
 
-	optOutService.EXPECT().Is(userID, ctx).Return(false, nil)
-	notifyService.EXPECT().Save(notification, ctx).DoAndReturn(func(notification *dto.NotifyDTO, ctx context.Context) error {
-		notification.ID = notificationID
-		return nil
-	}).AnyTimes()
+	user := dto.User{
+		ID:        userID,
+		IsOptOut:  false,
+		CreatedAt: time.Now().Format(time.RFC822),
+	}
+
+	userService.EXPECT().Get(userID, ctx).Return(user, nil)
 	queueService.EXPECT().Send(notification, ctx).Return(errors.New("error rbq"))
 
-	target := NewNotificationUsecase(notifyService, queueService, optOutService)
+	target := NewNotificationUsecase(queueService, userService)
 
 	err := target.SendNotification(notification, ctx)
 
-	assert.NoError(t, err)
-	assert.Equal(t, notification.Status, dto.Failed)
-
-}
-
-func TestSendNotificationOnUpdateError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-
-	notifyService := mock.NewMockNotifyService(ctrl)
-	queueService := mock.NewMockQueueService(ctrl)
-	optOutService := mock.NewMockOptOutService(ctrl)
-
-	notification := &dto.NotifyDTO{
-		Message:       "message",
-		Title:         "titulo",
-		Image:         "cat.png",
-		Type:          "web",
-		ToUserID:      userID,
-		SchedulerDate: schedulerDate,
-	}
-
-	first := optOutService.EXPECT().Is(userID, ctx).Return(false, nil)
-	second := notifyService.EXPECT().Save(notification, ctx).DoAndReturn(func(notification *dto.NotifyDTO, ctx context.Context) error {
-		notification.ID = notificationID
-		return nil
-	})
-	third := queueService.EXPECT().Send(notification, ctx).Return(nil)
-	fourth := notifyService.EXPECT().Save(notification, ctx).Return(errors.New("error update"))
-
-	gomock.InOrder(
-		first,
-		second,
-		third,
-		fourth,
-	)
-	target := NewNotificationUsecase(notifyService, queueService, optOutService)
-
-	err := target.SendNotification(notification, ctx)
-
-	assert.EqualError(t, err, "error update")
+	assert.Error(t, err)
+	assert.EqualError(t, err, "error rbq")
 
 }

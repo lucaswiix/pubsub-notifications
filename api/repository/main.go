@@ -1,27 +1,43 @@
 package repository
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/lucaswiix/meli/notifications/utils"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/lucaswiix/meli/notifications/pkg/orm"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
 var (
-	DB *redis.Client
-	CH *amqp.Channel
+	DB                 dynamodbiface.DynamoDBAPI
+	CH                 *amqp.Channel
+	UsersTable         = "users"
+	NotificationsTable = "notifications"
 )
 
 func InitDatabase() error {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     viper.GetString("input.redis.addr"),
-		Password: viper.GetString("input.redis.password"),
-		DB:       0,
-	})
 
-	DB = rdb
+	sess, err := session.NewSession(&aws.Config{
+		Endpoint: aws.String(viper.GetString("input.dynamodb.addr")),
+		Region:   aws.String("us-east-1"),
+	},
+	)
+	if err != nil {
+		utils.Log.Error("error to connect to aws session", zap.Error(err))
+	}
+
+	svc := dynamodb.New(sess)
+
+	config := orm.NewDynamoDBORM(svc, UsersTable)
+
+	config.CreateTable(UsersTable)
+
+	DB = dynamodbiface.DynamoDBAPI(svc)
 	return nil
 }
 

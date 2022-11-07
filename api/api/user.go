@@ -13,21 +13,21 @@ import (
 	"go.uber.org/zap"
 )
 
-type optOutHandler struct {
-	optOutService service.OptOutService
+type userHandler struct {
+	userService service.UserService
 }
 
-func RegisterOptOutHandlers(handler *gin.Engine, optOutService service.OptOutService) {
-	ah := &optOutHandler{
-		optOutService,
+func RegisterUserHandlers(handler *gin.Engine, userService service.UserService) {
+	ah := &userHandler{
+		userService,
 	}
 
-	handler.POST("/api/user/opt-out", ah.Set)
+	handler.POST("/api/user/opt-out", ah.Put)
 	handler.DELETE("/api/user/opt-out/:id", ah.Del)
 }
 
-func (h *optOutHandler) Set(c *gin.Context) {
-	span, ctx := apm.StartSpan(c.Request.Context(), "SetOptOut", "request")
+func (h *userHandler) Put(c *gin.Context) {
+	span, ctx := apm.StartSpan(c.Request.Context(), "PutUser", "request")
 	defer span.End()
 	var optOut dto.OptOut
 
@@ -37,7 +37,7 @@ func (h *optOutHandler) Set(c *gin.Context) {
 		return
 	}
 
-	err := h.optOutService.Set(optOut.UserID, ctx)
+	err := h.userService.PutOptOut(optOut.UserID, ctx)
 	if err != nil {
 		utils.Log.Error(fmt.Sprintf("error on try save database %s", c.GetString("request_id")), zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -52,12 +52,12 @@ func (h *optOutHandler) Set(c *gin.Context) {
 
 }
 
-func (h *optOutHandler) Del(c *gin.Context) {
-	span, ctx := apm.StartSpan(c.Request.Context(), "DeleteOptOut", "request")
+func (h *userHandler) Del(c *gin.Context) {
+	span, ctx := apm.StartSpan(c.Request.Context(), "DeleteUser", "request")
 	defer span.End()
 	userID := c.Param("id")
 
-	err := h.optOutService.Del(userID, ctx)
+	err := h.userService.Del(userID, ctx)
 	if err != nil {
 		utils.Log.Error(fmt.Sprintf("error on try delete opt-out user in database %s", c.GetString("request_id")), zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{

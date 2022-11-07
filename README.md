@@ -54,9 +54,7 @@ ws://localhost:1323/notifications/track/${userUUID}
 
 
 # Observability
-- logs `http://localhost:5601/app/logs/stream`
-- metrics `http://localhost:8080/metrics`
-- trace NTD
+- kibana `http://localhost:5601/`
 
 # Test coverage
 ```
