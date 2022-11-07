@@ -42,12 +42,7 @@ func IsAfterNow(
 		return true
 	}
 	now := time.Now()
-	datanow := now.Format(time.RFC822)
-	Log.Info(datanow)
-
 	schedulerDate, err := time.ParseInLocation("2006-01-02 15:04:05", value, time.Local)
-	dataFuture := schedulerDate.Format(time.RFC822)
-	Log.Info(dataFuture)
 
 	if err != nil {
 		return false

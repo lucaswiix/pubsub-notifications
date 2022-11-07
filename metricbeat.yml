@@ -10,8 +10,23 @@ output.elasticsearch:
   hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
   username: '${ELASTICSEARCH_USERNAME:}'
   password: '${ELASTICSEARCH_PASSWORD:}'
+setup.kibana:
+  host: "kibana:5601"
 
-metricbeat.autodiscover:
-  providers:
-    - type: docker
-      hints.enabled: true
+metricbeat.modules:
+- module: elasticsearch
+  xpack.enabled: true
+  period: 10s
+  hosts: ["http://elasticsearch:9200"]
+- module: redis
+  metricsets: ["info", "keyspace"]
+  enabled: true
+  period: 10s
+  hosts: ["redis://cache:6379?password=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81"]
+- module: rabbitmq
+  metricsets: ["node", "queue", "connection", "exchange"]
+  enabled: true
+  period: 10s
+  username: guest
+  password: guest
+  hosts: ["rabbitmq:15672"]

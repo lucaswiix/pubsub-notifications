@@ -15,6 +15,8 @@ type rabbitmqClient struct {
 	ch                 *amqp.Channel
 	connString         string
 	notificationStatus <-chan amqp.Delivery
+	done               chan error
+	lastRecoverTime    int64
 }
 
 func NewRabbitMQClient(connectionString, queueName string) (*rabbitmqClient, error) {
@@ -46,6 +48,7 @@ func (c *rabbitmqClient) ConsumeByUserID(ctx context.Context, userID, nType stri
 			return msg.Body, nil
 		}
 	}
+
 	return nil, errors.New("err when getting notification status on channel")
 }
 
@@ -68,14 +71,20 @@ func (c *rabbitmqClient) configureQueue(queueName string) error {
 		return err
 	}
 
+	go func() {
+		utils.Log.Info("closing: ", zap.Error(<-c.conn.NotifyClose(make(chan *amqp.Error))))
+		c.done <- errors.New("channel closed")
+	}()
+
 	c.notificationStatus, err = c.ch.Consume(
 		queueName, // queue
 		"",        // consumer
 		false,     // auto-ack
-		false,     // exclusive
+		true,      // exclusive
 		false,     // no-local
-		true,      // no-wait
+		false,     // no-wait
 		nil,       // args
 	)
+
 	return err
 }

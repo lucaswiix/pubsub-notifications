@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/lucaswiix/meli/notifications/dto"
-	"github.com/lucaswiix/meli/notifications/service/mock"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/service/mock"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
@@ -35,7 +36,7 @@ func Test_Set_Opt_Out_User_Success(t *testing.T) {
 
 	requestBody, _ := json.Marshal(user)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/opt-out", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/user/opt-out", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)
@@ -57,7 +58,7 @@ func Test_Set_Opt_Out_User_Validate_Error(t *testing.T) {
 
 	requestBody, _ := json.Marshal(user)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/opt-out", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/user/opt-out", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)
@@ -85,7 +86,7 @@ func Test_Set_Opt_Out_User_Service_Error_Error(t *testing.T) {
 
 	requestBody, _ := json.Marshal(user)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/opt-out", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/user/opt-out", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)
@@ -109,7 +110,7 @@ func Test_Del_Opt_Out_User_Success(t *testing.T) {
 	RegisterOptOutHandlers(router, optOutService)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/opt-out/%s", userID), nil)
+	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/user/opt-out/%s", userID), nil)
 	req.Header.Add("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)
@@ -130,7 +131,7 @@ func Test_Del_Opt_Out_Service_Error(t *testing.T) {
 	RegisterOptOutHandlers(router, optOutService)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/opt-out/%s", userID), nil)
+	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/user/opt-out/%s", userID), nil)
 	req.Header.Add("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)

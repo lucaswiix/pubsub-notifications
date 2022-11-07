@@ -64,11 +64,6 @@ services:
     networks:
       - rabbitmq_go_net
   elasticsearch:
-    labels:
-      co.elastic.logs/enabled: false
-      co.elastic.metrics/module: "elasticsearch"
-      co.elastic.metrics/hosts: "http://elasticsearch:9200"
-      co.elastic.metrics/metricsets: "node_stats,node"
     image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
     environment:
       - discovery.type=single-node
@@ -82,6 +77,8 @@ services:
       - "9200:9200"
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    networks:
+      - rabbitmq_go_net
   filebeat:
     labels:
       co.elastic.logs/enabled: false
@@ -107,37 +104,21 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
+    networks:
+      - rabbitmq_go_net
   metricbeat:
     build: 
       context: .
       dockerfile: Dockerfile.metricbeat
-    image: hint-enabled-metricbeat:7.11.1
-    user: root
     environment:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     volumes:
       - metricbeat-data01:/usr/share/metricbeat/data
-      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - elasticsearch
-  apm-server:
-    image: docker.elastic.co/apm/apm-server:7.14.0
-    # cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
-    # cap_drop: ["ALL"]
-    ports:
-      - 8200:8200
-    depends_on:
-      - elasticsearch
-      - kibana
-    volumes:
-      - ./apm-server.yml:/usr/share/apm-server/apm-server.yml 
-    command: /usr/share/apm-server/apm-server -e -c /usr/share/apm-server/apm-server.yml -E apm-server.host=apm-server:8200 --strict.perms=false
-    healthcheck:
-      interval: 10s
-      retries: 12
-      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
     networks:
       - rabbitmq_go_net
+
 networks:
   rabbitmq_go_net:
     driver: bridge

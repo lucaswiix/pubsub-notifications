@@ -47,7 +47,7 @@ curl --location --request POST 'localhost:8080/api/user/opt-out' \
 curl --location --request DELETE 'localhost:8080/api/user/opt-out/33f0a01e-bafc-47cb-b5b8-f96d451086ed'
 ```
 
-- consumer web client
+- simulate consumer web client
 ```
 ws://localhost:1323/notifications/track/${userUUID}
 ```

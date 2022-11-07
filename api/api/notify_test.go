@@ -3,15 +3,16 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"github.com/lucaswiix/meli/notifications/dto"
-	"github.com/lucaswiix/meli/notifications/usecase/mock"
-	"github.com/lucaswiix/meli/notifications/utils"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/lucaswiix/meli/notifications/dto"
+	"github.com/lucaswiix/meli/notifications/usecase/mock"
+	"github.com/lucaswiix/meli/notifications/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
@@ -46,7 +47,7 @@ func Test_Send_Notification_With_Scheduler_Success(t *testing.T) {
 
 	requestBody, _ := json.Marshal(notificationDTO)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/notify", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/notify", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("x-user-id", userID)
 
@@ -77,7 +78,7 @@ func Test_Send_Notification_Without_Scheduler_Success(t *testing.T) {
 
 	requestBody, _ := json.Marshal(notificationDTO)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/notify", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/notify", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("x-user-id", userID)
 
@@ -103,7 +104,7 @@ func Test_Send_Notification_Without_UserID_Error(t *testing.T) {
 
 	requestBody, _ := json.Marshal(notificationDTO)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/notify", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/notify", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)
@@ -132,7 +133,7 @@ func Test_Send_Notification_Invalid_Fields_Error(t *testing.T) {
 
 	requestBody, _ := json.Marshal(notificationDTO)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/notify", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/notify", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("x-user-id", userID)
 
@@ -163,7 +164,7 @@ func Test_Send_Notification_Is_Opt_Out_User_Error(t *testing.T) {
 
 	requestBody, _ := json.Marshal(notificationDTO)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/notify", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/notify", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("x-user-id", userID)
 
@@ -197,7 +198,7 @@ func Test_Send_Notification_Generic_Send_Notification_Error(t *testing.T) {
 
 	requestBody, _ := json.Marshal(notificationDTO)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/notify", strings.NewReader(string(requestBody)))
+	req, _ := http.NewRequest("POST", "/api/notify", strings.NewReader(string(requestBody)))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("x-user-id", userID)
 
