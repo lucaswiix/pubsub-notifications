@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/lucaswiix/notifications-tracking-app/utils"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -40,7 +41,7 @@ func NewRabbitMQClient(connectionString, queueName string) (*rabbitmqClient, err
 func (c *rabbitmqClient) ConsumeByUserID(ctx context.Context, userID, nType string) ([]byte, error) {
 	for msg := range c.notificationStatus {
 		if msg.MessageId == userID && msg.Type == nType {
-			utils.Log.Debug("receive notification", zap.String("to user id", msg.MessageId), zap.String("message type", msg.Type))
+			utils.Log.Debug(fmt.Sprintf("receive notification to user %s, type %s", msg.MessageId, msg.Type))
 			_ = msg.Ack(false)
 			return msg.Body, nil
 		}
