@@ -7,6 +7,7 @@ import (
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/service"
 	"github.com/lucaswiix/meli/notifications/utils"
+	"go.elastic.co/apm"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -26,7 +27,8 @@ func RegisterOptOutHandlers(handler *gin.Engine, optOutService service.OptOutSer
 }
 
 func (h *optOutHandler) Set(c *gin.Context) {
-	ctx := c.Request.Context()
+	span, ctx := apm.StartSpan(c.Request.Context(), "SetOptOut", "request")
+	defer span.End()
 	var optOut dto.OptOut
 
 	if err := c.ShouldBind(&optOut); err != nil {
@@ -51,7 +53,8 @@ func (h *optOutHandler) Set(c *gin.Context) {
 }
 
 func (h *optOutHandler) Del(c *gin.Context) {
-	ctx := c.Request.Context()
+	span, ctx := apm.StartSpan(c.Request.Context(), "DeleteOptOut", "request")
+	defer span.End()
 	userID := c.Param("id")
 
 	err := h.optOutService.Del(userID, ctx)

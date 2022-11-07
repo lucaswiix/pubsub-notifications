@@ -8,6 +8,7 @@ import (
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/usecase"
 	"github.com/lucaswiix/meli/notifications/utils"
+	"go.elastic.co/apm"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -26,11 +27,13 @@ func RegisterNotifyHandlers(handler *gin.Engine, notificationUsecase usecase.Not
 }
 
 func (h *notifyHandler) Sent(c *gin.Context) {
-	ctx := c.Request.Context()
+	span, ctx := apm.StartSpan(c.Request.Context(), "SentNotification", "request")
+	defer span.End()
 	var notifyDTO dto.NotifyDTO
 	userID := c.GetHeader("x-user-id")
 	notifyDTO.ToUserID = userID
 	status := http.StatusOK
+
 	defer func() {
 		notificationStatus.WithLabelValues(notifyDTO.ToUserID, strconv.Itoa(status)).Inc()
 	}()

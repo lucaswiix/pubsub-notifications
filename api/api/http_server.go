@@ -11,6 +11,7 @@ import (
 	"github.com/lucaswiix/meli/notifications/usecase"
 	"github.com/lucaswiix/meli/notifications/utils"
 	"github.com/prometheus/client_golang/prometheus"
+	"go.elastic.co/apm/module/apmgin"
 
 	_ "time/tzdata"
 
@@ -27,6 +28,7 @@ var notificationStatus = prometheus.NewCounterVec(
 )
 
 func InitWebServer() *gin.Engine {
+
 	gin.SetMode(gin.ReleaseMode)
 	gin.DisableConsoleColor()
 	ginServer := gin.New()
@@ -34,8 +36,10 @@ func InitWebServer() *gin.Engine {
 	// Initial packages
 	cors := cors.NewCors()
 	utils.InitValidation()
+
 	// Middleware
-	ginServer.Use(gin.Recovery())
+	ginServer.Use(apmgin.Middleware(ginServer))
+	// ginServer.Use(gin.Recovery())
 	ginServer.Use(gzip.Gzip(gzip.BestSpeed))
 	ginServer.Use(cors.CORS())
 

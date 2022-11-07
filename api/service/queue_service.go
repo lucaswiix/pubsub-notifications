@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/repository"
 	"github.com/lucaswiix/meli/notifications/utils"
+	"go.elastic.co/apm"
 
 	"go.uber.org/zap"
 )
@@ -25,7 +27,8 @@ func NewQueueService(repository repository.QueueRepository) QueueService {
 }
 
 func (s *queueServiceImpl) Send(notification *dto.NotifyDTO, ctx context.Context) error {
-
+	span, ctx := apm.StartSpan(ctx, "SendToQueue", "service")
+	defer span.End()
 	err := s.repository.Send(notification, ctx)
 	if err != nil {
 		utils.Log.Error("error on try sent notification", zap.Error(err))

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/lucaswiix/meli/notifications/repository"
+	"go.elastic.co/apm"
 )
 
 //go:generate mockgen -destination=mock/opt_out.go -package=mock . OptOutService
@@ -24,14 +25,20 @@ func NewOptOutService(repository repository.OptOutRepository) OptOutService {
 }
 
 func (s *OptOutServiceImpl) Set(userID string, ctx context.Context) error {
+	span, ctx := apm.StartSpan(ctx, "SetOptOut", "service")
+	defer span.End()
 	return s.repository.Set(userID, ctx)
 }
 
 func (s *OptOutServiceImpl) Del(userID string, ctx context.Context) error {
+	span, ctx := apm.StartSpan(ctx, "DelOptOut", "service")
+	defer span.End()
 	return s.repository.Del(userID, ctx)
 }
 
 func (s *OptOutServiceImpl) Is(userID string, ctx context.Context) (bool, error) {
+	span, ctx := apm.StartSpan(ctx, "IsOptOut", "service")
+	defer span.End()
 	isOptOut, err := s.repository.Is(userID, ctx)
 	if err != nil {
 		return false, err

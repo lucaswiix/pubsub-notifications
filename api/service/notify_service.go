@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/repository"
 	"github.com/lucaswiix/meli/notifications/utils"
+	"go.elastic.co/apm"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -26,6 +28,8 @@ func NewNotifyService(repository repository.NotifyRepository) NotifyService {
 }
 
 func (s *notifyServiceImpl) Save(notification *dto.NotifyDTO, ctx context.Context) error {
+	span, ctx := apm.StartSpan(ctx, "SaveNotification", "service")
+	defer span.End()
 	if notification.ID == "" {
 		notification.ID = uuid.New().String()
 	}

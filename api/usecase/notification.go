@@ -3,9 +3,11 @@ package usecase
 import (
 	"context"
 	"fmt"
+
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/service"
 	"github.com/lucaswiix/meli/notifications/utils"
+	"go.elastic.co/apm"
 
 	"go.uber.org/zap"
 )
@@ -29,6 +31,9 @@ func NewNotificationUsecase(notifyService service.NotifyService, queueService se
 	}
 }
 func (s *notificationUsecaseImpl) SendNotification(notification *dto.NotifyDTO, ctx context.Context) error {
+	span, ctx := apm.StartSpan(ctx, "SentNotification", "usecase")
+	defer span.End()
+
 	notification.ID = ""
 	if err := IsOptOut(notification, ctx, s.optOutService); err != nil {
 		return err

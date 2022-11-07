@@ -3,9 +3,11 @@ package repository
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/utils"
-	"time"
+	"go.elastic.co/apm"
 
 	"github.com/goccy/go-json"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -26,6 +28,10 @@ func NewQueueRepository(ch *amqp.Channel) QueueRepository {
 }
 
 func (r *implQueueRepository) Send(notification *dto.NotifyDTO, ctx context.Context) error {
+
+	span, ctx := apm.StartSpan(ctx, "SendQueueNotification", "repository")
+	defer span.End()
+
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 

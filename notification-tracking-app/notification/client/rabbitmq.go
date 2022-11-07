@@ -40,6 +40,7 @@ func NewRabbitMQClient(connectionString, queueName string) (*rabbitmqClient, err
 func (c *rabbitmqClient) ConsumeByUserID(ctx context.Context, userID, nType string) ([]byte, error) {
 	for msg := range c.notificationStatus {
 		if msg.MessageId == userID && msg.Type == nType {
+			utils.Log.Debug("receive notification", zap.String("to user id", msg.MessageId), zap.String("message type", msg.Type))
 			_ = msg.Ack(false)
 			return msg.Body, nil
 		}

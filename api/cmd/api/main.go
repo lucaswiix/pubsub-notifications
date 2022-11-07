@@ -25,7 +25,9 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var err error
 		utils.InitLogger()
+		os.Setenv("ELASTIC_APM_SERVER_URL", "http://localhost:8200")
 
+		utils.Log.Info("elastic apm server %s", zap.String("ELASTIC_APM_SERVER_URL", os.Getenv("ELASTIC_APM_SERVER_URL")))
 		if err = repository.InitDatabase(); err != nil {
 			utils.Log.Error("error to open database connection", zap.Error(err))
 			os.Exit(1)
@@ -60,6 +62,7 @@ func init() {
 
 	rootCmd.Flags().String("input.api.port", "", "http server api port")
 	rootCmd.Flags().String("input.redis.addr", "", "input redis address")
+	rootCmd.Flags().String("input.apm_server", "", "apm server host")
 	rootCmd.Flags().String("input.redis.password", "", "input redis password")
 	rootCmd.Flags().String("input.rabbitmq.subscription_url", "", "input redis subscribe url")
 	rootCmd.Flags().String("logger.level", "", "logger level")

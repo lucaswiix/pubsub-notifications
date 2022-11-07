@@ -3,8 +3,10 @@ package repository
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/lucaswiix/meli/notifications/dto"
 	"github.com/lucaswiix/meli/notifications/utils"
+	"go.elastic.co/apm"
 
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
@@ -24,6 +26,8 @@ func NewNotifyRepository(redisDB *redis.Client) NotifyRepository {
 }
 
 func (r *implNotifyRepository) Save(notification *dto.NotifyDTO, ctx context.Context) error {
+	span, ctx := apm.StartSpan(ctx, "SaveNotification", "repository")
+	defer span.End()
 	json, err := json.Marshal(notification)
 	if err != nil {
 		utils.Log.Error("failed to decode notification interface", zap.Error(err))
